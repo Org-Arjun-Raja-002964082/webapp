@@ -1,7 +1,19 @@
 # webapp
 Repository for the course CSYE-6225
-- Arjun Raja Yogidas
-- 002964082
+<table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>NUID</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Arjun Raja Yogidas</td>
+        <td>002964082</td>
+      </tr>
+    </tbody>
+</table>
 
 
 ## Description

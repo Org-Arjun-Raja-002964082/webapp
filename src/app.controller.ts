@@ -7,11 +7,11 @@ export class AppController {
 
   @Get('/healthz')
   healthz() {
-    return;
+    return {status : "200 OK"};
   }
 
-  @Get('/external')
-  async external(): Promise<any> {
-    return await this.appService.external();
-  } 
+  // @Get('/external')
+  // async external(): Promise<any> {
+  //   return await this.appService.external();
+  // } 
 }
