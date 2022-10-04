@@ -27,7 +27,6 @@ export class AuthGuard implements CanActivate {
       request.user = user;
       return true;
     }
-    // console.log('request: ', request.headers);
     // decode base64 bit here and find username and password
     // send username and password to authService
     // if authService returns user, then return true
