@@ -1,26 +1,42 @@
-import { Body, Controller, Get, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, UseGuards, UsePipes, ValidationPipe, Request } from '@nestjs/common';
+import { AuthGuard } from '../auth/auth.guard';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
+    constructor(private readonly userService: UsersService) {}
+
+
+    
+    @UseGuards(AuthGuard)
+    @Get(':id')
+    async findOneById(@Param('id', ParseIntPipe) id: number) { // this is a dummy function
+        return await this.userService.findUsersById(id);
+    }
+
+    @UseGuards(AuthGuard)
+    @Get('email/:email')
+    async findOneByEmail(@Param('email') email: string) { // this is a dummy function
+        return await this.userService.findOne(email);
+    }
+
+    @UseGuards(AuthGuard)
+    @Put(':id')
+    async update(@Request() req , @Body() updateUserDto : UpdateUserDto, @Param('id') id: string) { // this is a dummy function
+        return await this.userService.update(updateUserDto, req.user, id);
+    }
+
+    @Post('create')
+    @UsePipes(ValidationPipe)
+    async create(@Body() createUserDto: CreateUserDto) { // this is a dummy function
+        return await this.userService.createUser(createUserDto);;
+    }
+
+    @UseGuards(AuthGuard)
     @Get()
     findAll(): string { // this is a dummy function
         return 'This action returns all users';
     }
-
-    @Get(':id')
-    findOne(): string { // this is a dummy function
-        return 'This action returns a user';
-    }
-
-    @Put(':id')
-    update(): string { // this is a dummy function
-        return 'This action updates a user';
-    }
-
-    @Post()
-    create(@Body() createUserDto: CreateUserDto): string { // this is a dummy function
-        return 'This action adds a new user';
-    }
-
 }

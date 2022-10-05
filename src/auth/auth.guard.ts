@@ -15,14 +15,18 @@ export class AuthGuard implements CanActivate {
     context: ExecutionContext,
   ): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
+    console.log('request.headers.authorization: ', request.headers.authorization);
+    if(!request.headers.authorization){
+        return false;
+    }
     let combinedString = Buffer.from(request.headers.authorization.split(" ")[1], 'base64').toString();
-    console.log('combinedString: ', combinedString);
+    if(combinedString == null || combinedString == ""){
+        return false;
+    }
     let splitString = combinedString.split(":");
-    console.log('splitString: ', splitString);
     let username = splitString[0];
     let password = splitString[1];
     const user = await this.authService.validateUser(username, password);
-    console.log('user: ', user);
     if (user) {
       request.user = user;
       return true;
