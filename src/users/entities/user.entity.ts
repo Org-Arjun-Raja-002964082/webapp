@@ -4,7 +4,7 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateCol
 export class User {
     @PrimaryGeneratedColumn({
         type: 'bigint',
-        name: 'user_id',
+        name: 'id',
     })
     id: number;
 
@@ -40,12 +40,12 @@ export class User {
         type: "timestamp", 
         default: () => "CURRENT_TIMESTAMP(6)" 
     })
-    created_at: Date;
+    account_created: Date;
 
     @UpdateDateColumn({ 
         type: "timestamp", 
         default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" 
     })
-    updated_at: Date;
+    account_updated: Date;
 
 }
