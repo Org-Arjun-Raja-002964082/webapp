@@ -28,6 +28,7 @@ You will also need to have postgres running in your local machine
  - use cli tools like brew to install postgres
  - create a database `webapp_db` add your credentials in the `.env` file 
  - make sure that the postgres process is running in the background and specify the correct port name in your `.env` file. (default is 5432)
+ - Create a datbase using `CREATE DATABASE webapp_db`
 
 ### Node
 - #### Node installation on Windows
