@@ -48,4 +48,12 @@ export class User {
     })
     account_updated: Date;
 
+
+    constructor(email: string, password: string,  firstName: string, lastName: string) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+    }
+
 }
