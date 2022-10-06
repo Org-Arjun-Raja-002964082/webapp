@@ -4,7 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 
-@Controller('users')
+@Controller('v1/account')
 export class UsersController {
     constructor(private readonly userService: UsersService) {}
 
@@ -28,7 +28,7 @@ export class UsersController {
         return await this.userService.update(updateUserDto, req.user, id);
     }
 
-    @Post('create')
+    @Post()
     @UsePipes(ValidationPipe)
     async create(@Body() createUserDto: CreateUserDto) { // this is a dummy function
         return await this.userService.createUser(createUserDto);;
