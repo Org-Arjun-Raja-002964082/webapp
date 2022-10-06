@@ -15,7 +15,7 @@ export class UsersService {
 
   async createUser(createUserDto: CreateUserDto) {
     const prevUser = await this.userRepository.findOne({
-      where: { email: createUserDto.email }
+      where: { username: createUserDto.username }
     });
     if(prevUser) {
       throw new HttpException({
@@ -43,9 +43,9 @@ export class UsersService {
     return response;
   }
 
-  async findOne(email: string): Promise<User | undefined> {
+  async findOne(username: string): Promise<User | undefined> {
     return await this.userRepository.findOne({
-      where: { email: email }
+      where: { username: username }
     });
   }
 

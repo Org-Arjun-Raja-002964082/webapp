@@ -1,4 +1,4 @@
-import { Injectable, CanActivate, ExecutionContext, Inject, forwardRef } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, Inject, forwardRef, HttpException, HttpStatus } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
@@ -15,7 +15,6 @@ export class AuthGuard implements CanActivate {
     context: ExecutionContext,
   ): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    console.log('request.headers.authorization: ', request.headers.authorization);
     if(!request.headers.authorization){
         return false;
     }
@@ -34,6 +33,9 @@ export class AuthGuard implements CanActivate {
     // decode base64 bit here and find username and password
     // send username and password to authService
     // if authService returns user, then return true
-    return false;
+    throw new HttpException({
+      status: HttpStatus.UNAUTHORIZED,
+      error: 'Credentials are not valid',
+    }, HttpStatus.UNAUTHORIZED);
   }  
 }
