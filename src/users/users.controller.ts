@@ -17,9 +17,9 @@ export class UsersController {
     }
 
     @UseGuards(AuthGuard)
-    @Get('email/:email')
-    async findOneByEmail(@Param('email') email: string) { // this is a dummy function
-        return await this.userService.findOne(email);
+    @Get('username/:username')
+    async findOneByUsername(@Param('username') username: string) { // this is a dummy function
+        return await this.userService.findOne(username);
     }
 
     @UseGuards(AuthGuard)

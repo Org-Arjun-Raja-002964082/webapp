@@ -48,7 +48,7 @@ describe('UsersService', () => {
     it('should get a single user', () => {
       const repoSpy = jest.spyOn(repo, 'findOne');
       expect(service.findOne('gmail@email.com')).resolves.toEqual(oneUser);
-      expect(repoSpy).toBeCalledWith({ where: { email: 'gmail@email.com' } });
+      expect(repoSpy).toBeCalledWith({ where: { username: 'gmail@email.com' } });
     });
   });
 

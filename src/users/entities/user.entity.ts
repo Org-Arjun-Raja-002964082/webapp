@@ -13,7 +13,7 @@ export class User {
         nullable: false,
         default: '',
     })
-    email: string;
+    username: string;
 
     @Column({
         name: 'password',
@@ -49,8 +49,8 @@ export class User {
     account_updated: Date;
 
 
-    constructor(email: string, password: string,  firstName: string, lastName: string) {
-        this.email = email;
+    constructor(username: string, password: string,  firstName: string, lastName: string) {
+        this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
