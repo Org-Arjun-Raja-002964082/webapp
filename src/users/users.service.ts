@@ -29,7 +29,14 @@ export class UsersService {
     return  response;
   }
 
-  async findUsersById(id: number) {
+  async findUsersById(id: number, req_user: any) {
+    let user_param_id = id;
+    if(user_param_id != req_user.id) {
+      throw new HttpException({
+        status: HttpStatus.BAD_REQUEST,
+        error: 'You cannot access another user',
+      }, HttpStatus.BAD_REQUEST);
+    }
     const user = await this.userRepository.findOne({ 
       where: { id },
      });

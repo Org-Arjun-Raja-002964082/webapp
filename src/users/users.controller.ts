@@ -12,8 +12,8 @@ export class UsersController {
     
     @UseGuards(AuthGuard)
     @Get(':id')
-    async findOneById(@Param('id', ParseIntPipe) id: number) { // this is a dummy function
-        return await this.userService.findUsersById(id);
+    async findOneById(@Request() req, @Param('id', ParseIntPipe) id: number) { // this is a dummy function
+        return await this.userService.findUsersById(id, req.user);
     }
 
     @UseGuards(AuthGuard)
