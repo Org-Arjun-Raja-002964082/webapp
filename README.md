@@ -84,3 +84,6 @@ $ npm run start:prod
 # unit tests
 $ npm run test
 ```
+```
+API Endpoints
+```
