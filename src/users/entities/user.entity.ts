@@ -27,14 +27,15 @@ export class User {
         nullable: false,
         default: '',
     })
-    firstName: string;
+    first_name: string;
 
     @Column({
         name: 'last_name',
         nullable: false,
         default: '',
     })
-    lastName: string;
+    last_name: string;
+    
 
     @CreateDateColumn({ 
         type: "timestamp", 
@@ -49,10 +50,10 @@ export class User {
     account_updated: Date;
 
 
-    constructor(username: string, password: string,  firstName: string, lastName: string) {
+    constructor(username: string, password: string,  first_name: string, last_name: string) {
         this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.first_name = first_name;
+        this.last_name = last_name;
         this.password = password;
     }
 

@@ -94,7 +94,7 @@ export class UsersService {
 
   hasForUnknownFields(updateUserDto) {
     for (var propName in updateUserDto) {
-      if (!['password', 'firstName', 'lastName'].includes(propName)) {
+      if (!['password', 'first_name', 'last_name'].includes(propName)) {
         return true;
       }
     }

@@ -9,8 +9,8 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     password: string;
 
     @IsOptional()
-    firstName: string;
+    first_name: string;
 
     @IsOptional()
-    lastName: string;
+    last_name: string;
 }
