@@ -84,6 +84,13 @@ $ npm run start:prod
 # unit tests
 $ npm run test
 ```
+
+## API Endpoints
+
 ```
-API Endpoints
+/healthz [GET] - get the health status of the webapp
+v1/account [POST] - create a new user
+v1/acount/:id [GET] - fetch authenticated User
+v1/account/:id [PUT] - update authenticated user
 ```
+

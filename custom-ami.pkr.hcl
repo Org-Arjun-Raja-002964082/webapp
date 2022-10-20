@@ -71,7 +71,7 @@ build {
   }
   provisioner "file" {
     destination = "/home/ubuntu/webapp.service"
-    source      = "packer/webapp.service"
+    source      = "webapp.service"
   }
 
   // provisioner "file" {
@@ -80,6 +80,6 @@ build {
   // }
 
   provisioner "shell" {
-    scripts = ["packer/setup.sh"]
+    scripts = ["setup.sh"]
   }
 }
