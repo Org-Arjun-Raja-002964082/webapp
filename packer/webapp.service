@@ -4,12 +4,14 @@ After=multi-user.target
 [Service]
 Type=simple
 User=ubuntu
-ExecStart=/usr/bin/node /home/ubuntu/dist/main.js
+ExecStart=/usr/bin/node /home/ubuntu/dist/src/main.js
 Restart=always
 RestartSec=5
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=webapp_logs
 Environment=NODE_PORT=3001
+
+
 [Install]
 WantedBy=multi-user.target
