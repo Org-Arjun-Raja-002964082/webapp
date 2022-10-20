@@ -1,0 +1,13 @@
+[Unit]
+Description=main.js - autorun the node app
+Documentation=https://example.com
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+ExecStart=/bin/sh /home/ubuntu/node_start.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
