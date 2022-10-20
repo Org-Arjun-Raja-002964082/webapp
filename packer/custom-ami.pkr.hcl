@@ -72,15 +72,15 @@ build {
   }
   provisioner "file" {
     destination = "/home/ubuntu/webapp.service"
-    source      = "webapp.service"
+    source      = "packer/webapp.service"
   }
 
   provisioner "file" {
     destination = "/home/ubuntu/node_start.sh"
-    source      = "node_start.sh"
+    source      = "packer/node_start.sh"
   }
 
   provisioner "shell" {
-    scripts = ["setup.sh"]
+    scripts = ["packer/setup.sh"]
   }
 }
