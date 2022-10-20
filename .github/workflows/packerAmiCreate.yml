@@ -46,18 +46,18 @@ jobs:
         uses: hashicorp/packer-github-actions@master
         with:
           command: init
-          target: ami.pkr.hcl
+          target: packer/custom-ami.pkr.hcl
       - name: 5. Validate packer template
         uses: hashicorp/packer-github-actions@master
         with:
           command: validate
           arguments: -syntax-only
-          target: ami.pkr.hcl
+          target: packer/custom-ami.pkr.hcl
       - name: 6. create Custom AMI from template
         uses: hashicorp/packer-github-actions@master
         with:
           command: build
           arguments: "-color=false -on-error=abort"
-          target: ami.pkr.hcl
+          target: packer/custom-ami.pkr.hcl
         env:
           PACKER_LOG: 1
