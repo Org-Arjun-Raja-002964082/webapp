@@ -33,9 +33,10 @@ echo "##########  test done #############"
 echo "########## change permission for start script #############"
 sudo chmod 777 /home/ubuntu/node_start.sh
 sleep 10
+# sudo mv /home/ubuntu/webapp.service /etc/systemd/system/webapp.service
 sudo mv /home/ubuntu/webapp.service /etc/systemd/system/webapp.service
 sudo systemctl enable webapp.service
 sudo systemctl status webapp.service
-# sudo systemctl start webapp.service
+sudo systemctl start webapp.service
 echo "############### THE END ##############"
 # cd ../../
