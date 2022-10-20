@@ -17,7 +17,7 @@ sleep 10
 unzip webapp.zip
 sudo rm -rf webapp.zip
 echo "########## unzip done #############"
-sudo chown ubuntu:ubuntu webapp-main 
+# sudo chown ubuntu:ubuntu webapp-main 
 ls -lrta
 # cd webapp-main
 sudo npm install
