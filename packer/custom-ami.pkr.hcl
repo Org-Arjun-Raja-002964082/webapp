@@ -34,7 +34,7 @@ variable "subnet_id" {
 source "amazon-ebs" "my-ami" {
   ami_users       = ["735786237983", "154872826991"]
   region          = "${var.aws_region}"
-  ami_name        = "csye6225_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}"
+  ami_name        = "Custom_AMI_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}"
   ami_description = "AMI for CSYE 6225"
   ami_regions = [
     "us-east-1",
@@ -47,7 +47,6 @@ source "amazon-ebs" "my-ami" {
   source_ami    = "${var.source_ami}"
   ssh_username  = "${var.ssh_username}"
   subnet_id     = "${var.subnet_id}"
-  ssh_timeout   = "30m"
   launch_block_device_mappings {
     delete_on_termination = true
     device_name           = "/dev/sda1"
