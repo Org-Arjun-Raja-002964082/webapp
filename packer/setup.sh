@@ -10,16 +10,16 @@ sudo -u postgres createuser myuser
 sudo -u postgres createdb webapp_db
 sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'admin';"
 sudo apt-get install zip unzip
-echo "=========================================== testing changes ==========================================="
+echo "=========================================== Pre shell commands ==========================================="
 sleep 10
 # ls -lrta
-whoami
+# whoami
 unzip webapp.zip
 sudo rm -rf webapp.zip
 echo "########## unzip done #############"
 sudo chown ubuntu:ubuntu webapp-main 
 ls -lrta
-cd webapp-main
+# cd webapp-main
 sudo npm install
 pwd
 sudo touch .env
@@ -31,8 +31,8 @@ sudo npm run test
 echo "##########  test done #############"
 # sudo npm run dev
 echo "########## change permission for start script #############"
-sudo chmod 777 /home/ubuntu/node_start.sh
-sleep 10
+# sudo chmod 777 /home/ubuntu/node_start.sh
+# sleep 10
 # sudo mv /home/ubuntu/webapp.service /etc/systemd/system/webapp.service
 sudo mv /home/ubuntu/webapp.service /etc/systemd/system/webapp.service
 sudo systemctl enable webapp.service
