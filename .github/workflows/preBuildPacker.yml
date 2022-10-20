@@ -19,7 +19,7 @@ jobs:
       with:
           command: validate
           arguments: -syntax-only          
-          target:  packer/custom-ami.pkr.hcl
+          target:  custom-ami.pkr.hcl
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
