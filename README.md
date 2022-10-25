@@ -57,7 +57,7 @@ If the installation was successful, you should be able to run the following comm
 
 ## Install
 
-    $ git clone https://github.com/
+    $ git clone git@github.com:Org-Arjun-Raja-002964082/webapp.git
     $ cd webapp
     $ npm install
 
