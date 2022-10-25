@@ -1,23 +1,23 @@
-variable "aws_region" {
-  type    = string
-  default = "us-east-1"
-}
-variable "ami_source_owner" {
-  type    = string
-  default = "735786237983"
-}
-variable "source_ami" {
-  type    = string
-  default = "ami-08c40ec9ead489470" # Ubuntu 22.04 LTS
-}
-variable "ssh_username" {
-  type    = string
-  default = "ubuntu"
-}
-variable "subnet_id" {
-  type    = string
-  default = "subnet-084233cf79e451c4c"
-}
+// variable "aws_region" {
+//   type    = string
+//   default = "us-east-1"
+// }
+// variable "ami_source_owner" {
+//   type    = string
+//   default = "735786237983"
+// }
+// variable "source_ami" {
+//   type    = string
+//   default = "ami-08c40ec9ead489470" # Ubuntu 22.04 LTS
+// }
+// variable "ssh_username" {
+//   type    = string
+//   default = "ubuntu"
+// }
+// variable "subnet_id" {
+//   type    = string
+//   default = "subnet-084233cf79e451c4c"
+// }
 // variable "vpc_id" {
 //   type    = string
 //   default = "vpc-02b8d795df37b8a79"
