@@ -31,7 +31,7 @@
 //   default = env("AWS_SECRET_ACCESS_KEY")
 // }
 # https://www.packer.io/plugins/builders/amazon/ebs
-source "amazon-ebs" "my-ami" {
+sourc "amazon-ebs" "my-ami" {
   ami_users       = ["735786237983", "154872826991"]
   region          = "${var.aws_region}"
   ami_name        = "Custom_AMI_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}"
