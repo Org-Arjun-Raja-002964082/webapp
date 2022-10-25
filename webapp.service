@@ -11,6 +11,7 @@ StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=webapp_logs
 Environment=NODE_PORT=3001
+EnvironmentFile=/home/ubuntu/appserver.env
 
 
 [Install]
