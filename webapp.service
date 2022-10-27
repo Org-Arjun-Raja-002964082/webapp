@@ -7,17 +7,10 @@ User=ubuntu
 ExecStart=/usr/bin/node /home/ubuntu/dist/src/main.js
 Restart=always
 RestartSec=5
-<<<<<<< Updated upstream
-StandardOutput=syslog
-StandardError=syslog
-SyslogIdentifier=webapp_logs
-Environment=NODE_PORT=3001
-=======
 # StandardOutput=syslog
 # StandardError=syslog
 # SyslogIdentifier=webapp_logs
 # Environment=NODE_PORT=3001
->>>>>>> Stashed changes
 
 
 [Install]
