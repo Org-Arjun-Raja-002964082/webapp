@@ -16,3 +16,4 @@ pwd
 echo "########## Installation done #############"
 sudo npm run build
 echo "########## Build done #############"
+
