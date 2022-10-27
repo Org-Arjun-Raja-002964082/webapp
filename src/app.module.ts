@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import {TypeOrmModule} from '@nestjs/typeorm';
+import { DocumentsModule } from './documents/documents.module';
 import entities from '../typeorm_entities';
 
 @Module({
@@ -32,7 +33,8 @@ import entities from '../typeorm_entities';
       synchronize: true, // remove this in production
     }),
     inject: [ConfigService],
-  })
+  }),
+  DocumentsModule
 ],
   controllers: [AppController],
   providers: [AppService],
