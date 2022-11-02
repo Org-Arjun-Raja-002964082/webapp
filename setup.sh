@@ -14,6 +14,4 @@ echo "########## unzip done #############"
 ls -lrta
 pwd
 echo "########## Installation done #############"
-sudo npm run build
 echo "########## Build done #############"
-
