@@ -16,20 +16,9 @@ variable "ssh_username" {
 }
 variable "subnet_id" {
   type    = string
-  default = "subnet-084233cf79e451c4c"
+  default = "subnet-05fc83f8baefc8749"
 }
-// variable "vpc_id" {
-//   type    = string
-//   default = "vpc-02b8d795df37b8a79"
-// }
-// variable "aws_access_key" {
-//   type    = string
-//   default = env("AWS_ACCESS_KEY_ID")
-// }
-// variable "aws_secret_key" {
-//   type    = string
-//   default = env("AWS_SECRET_ACCESS_KEY")
-// }
+
 # https://www.packer.io/plugins/builders/amazon/ebs
 source "amazon-ebs" "my-ami" {
   ami_users       = ["735786237983", "154872826991"]
@@ -73,12 +62,6 @@ build {
     destination = "/home/ubuntu/webapp.service"
     source      = "webapp.service"
   }
-
-  // provisioner "file" {
-  //   destination = "/home/ubuntu/node_start.sh"
-  //   source      = "packer/node_start.sh"
-  // }
-
   provisioner "shell" {
     scripts = ["setup.sh"]
   }
