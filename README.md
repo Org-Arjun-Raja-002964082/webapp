@@ -93,5 +93,6 @@ v1/account [POST] - create a new user
 v1/acount/:id [GET] - fetch authenticated User
 v1/account/:id [PUT] - update authenticated user
 v1/documents/:id[GET] - get document for user
+v1/documents/
 ```
 
