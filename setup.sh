@@ -12,7 +12,6 @@ unzip webapp.zip
 sudo rm -rf webapp.zip
 echo "########## unzip done #############"
 ls -lrta
-sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 3000
 pwd
 echo "########## Installation done #############"
 echo "########## Build done #############"

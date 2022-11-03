@@ -62,6 +62,12 @@ build {
     destination = "/home/ubuntu/webapp.service"
     source      = "webapp.service"
   }
+
+  provisioner "file" {
+    destination = "/home/ubuntu/node_start.sh"
+    source      = "node_start.sh"
+  }
+
   provisioner "shell" {
     scripts = ["setup.sh"]
   }
