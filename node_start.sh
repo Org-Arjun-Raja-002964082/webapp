@@ -1,3 +1,3 @@
 #!/bin/bash
 
-# node /home/ubuntu/webapp-main/dist/src/main.js > /home/ubuntu/webapp-main/log.txt
+sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 3000

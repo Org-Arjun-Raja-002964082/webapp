@@ -5,6 +5,7 @@ After=multi-user.target
 Type=simple
 User=ubuntu
 ExecStart=/usr/bin/node /home/ubuntu/dist/src/main.js
+ExecStartPost=/home/ubuntu/node_start.sh
 Restart=always
 RestartSec=5
 StandardOutput=syslog
