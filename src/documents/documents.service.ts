@@ -115,8 +115,13 @@ export class DocumentsService {
     return `This action updates a #${id} document`;
   }
 
-  async remove(doc_id: string) {
+  async remove(doc_id: string, user: any) {
     try{
+      const user_id = user.id;
+      const filesData = await this.documentRepository.find({where: {user_id}});
+      if(!filesData){
+        return {message: 'File Not found'};
+      }
       const s3 = new S3();
       await s3.deleteObject({
         Bucket: process.env.AWS_BUCKET_NAME,

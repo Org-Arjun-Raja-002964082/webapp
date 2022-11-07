@@ -35,7 +35,8 @@ export class DocumentsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.documentsService.remove(id);
+  @UseGuards(AuthGuard)
+  remove(@Param('id') id: string, @Request() req) {
+    return this.documentsService.remove(id, req.user);
   }
 }
