@@ -5,22 +5,24 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
-// import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-// import { Logger } from 'winston';
-
-
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
+var lynx = require('lynx');
+const statsd = new lynx('localhost', 8125);
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
   ) {}
 
   async createUser(createUserDto: CreateUserDto) {
+    statsd.increment('POST/v1/account');
     const prevUser = await this.userRepository.findOne({
       where: { username: createUserDto.username }
     });
     if(prevUser) {
-      // this.logger.log('info','User already exists');
+      this.logger.log('info','User already exists');
       throw new HttpException({
         status: HttpStatus.BAD_REQUEST,
         error: 'User already exists',
@@ -33,9 +35,10 @@ export class UsersService {
   }
 
   async findUsersById(id: number, req_user: any) {
+    statsd.increment('GET/v1/account/{id}');
     let user_param_id = id;
     if(user_param_id != req_user.id) {
-      // this.logger.log('info','Unauthorized user');
+      this.logger.log('info','Unauthorized user');
       throw new HttpException({
         status: HttpStatus.BAD_REQUEST,
         error: 'You cannot access another user',
@@ -45,7 +48,7 @@ export class UsersService {
       where: { id },
      });
     if(!user) {
-      // this.logger.log('info','User not found');
+      this.logger.log('info','User not found');
       throw new HttpException({
         status: HttpStatus.BAD_REQUEST,
         error: 'User does not exist',
@@ -56,16 +59,17 @@ export class UsersService {
   }
 
   async findOne(username: string): Promise<User | undefined> {
-    // this.logger.log('info','Finding user');
+    this.logger.log('info','Finding user');
     return await this.userRepository.findOne({
       where: { username: username }
     });
   }
 
   async update(updateUserDto: UpdateUserDto, user: any, id: string) {
+    statsd.increment('PUT/v1/account/{id}');
     let user_param_id = parseInt(id);
     if(user_param_id != user.id) {
-      // this.logger.log('info','Unauthorized user');
+      this.logger.log('info','Unauthorized user');
       throw new HttpException({
         status: HttpStatus.BAD_REQUEST,
         error: 'You cannot update another user',
@@ -73,7 +77,7 @@ export class UsersService {
     }
     let cleanedDto = this.clean(updateUserDto);
     if (Object.keys(cleanedDto).length === 0){
-      // this.logger.log('info','No fields to update');
+      this.logger.log('info','No fields to update');
       throw new HttpException({
         status: HttpStatus.BAD_REQUEST,
         error: 'No fields to update',
@@ -81,7 +85,7 @@ export class UsersService {
     }
 
     if(this.hasForUnknownFields(cleanedDto)) {
-      // this.logger.log('info','Unknown fields');
+      this.logger.log('info','Unknown fields');
       throw new HttpException({
         status: HttpStatus.BAD_REQUEST,
         error: 'Bad fields to update',

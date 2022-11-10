@@ -7,6 +7,8 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
+var lynx = require('lynx');
+const statsd = new lynx('localhost', 8125);
 
 @Injectable()
 export class DocumentsService {
@@ -16,6 +18,7 @@ export class DocumentsService {
   ) {}
 
   async upload( file: Buffer, filename: string, user: any) {
+    statsd.increment('POST/v1/documents/');
     try {
     const s3 = new S3();
       const uploadResult = await s3
@@ -46,7 +49,7 @@ export class DocumentsService {
   }
 
   async findAll(user: any) {
-    console.log('user: ', user);
+    statsd.increment('GET/v1/documents/');
     try{
       const user_id = user.id;
       const filesData = await this.documentRepository.find({where: {user_id}});
@@ -62,6 +65,7 @@ export class DocumentsService {
   }
 
   async findOne(doc_id: string, user: any) {
+    statsd.increment('GET/v1/documents/:doc_id');
     try {
       if(!this.fileExists(doc_id)){
         this.logger.error(`File not found: ${doc_id}`);
@@ -94,6 +98,7 @@ export class DocumentsService {
 
   async remove(doc_id: string, user: any) {
     try{
+      statsd.increment('DELETE/v1/documents/:doc_id');
       const user_id = user.id;
       this.logger.log('info',`Finding file: ${doc_id} for user: ${user_id}`);
       const filesData = await this.documentRepository.find({where: {
