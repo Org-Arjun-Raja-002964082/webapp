@@ -18,6 +18,7 @@ export class UsersService {
       where: { username: createUserDto.username }
     });
     if(prevUser) {
+      // this.logger.log('User already exists');
       throw new HttpException({
         status: HttpStatus.BAD_REQUEST,
         error: 'User already exists',
@@ -32,6 +33,7 @@ export class UsersService {
   async findUsersById(id: number, req_user: any) {
     let user_param_id = id;
     if(user_param_id != req_user.id) {
+      // this.logger.log('Unauthorized user');
       throw new HttpException({
         status: HttpStatus.BAD_REQUEST,
         error: 'You cannot access another user',
@@ -41,6 +43,7 @@ export class UsersService {
       where: { id },
      });
     if(!user) {
+      // this.logger.log('User not found');
       throw new HttpException({
         status: HttpStatus.BAD_REQUEST,
         error: 'User does not exist',
@@ -51,6 +54,7 @@ export class UsersService {
   }
 
   async findOne(username: string): Promise<User | undefined> {
+    // this.logger.log('Finding user');
     return await this.userRepository.findOne({
       where: { username: username }
     });
@@ -59,6 +63,7 @@ export class UsersService {
   async update(updateUserDto: UpdateUserDto, user: any, id: string) {
     let user_param_id = parseInt(id);
     if(user_param_id != user.id) {
+      // this.logger.log('Unauthorized user');
       throw new HttpException({
         status: HttpStatus.BAD_REQUEST,
         error: 'You cannot update another user',
@@ -66,6 +71,7 @@ export class UsersService {
     }
     let cleanedDto = this.clean(updateUserDto);
     if (Object.keys(cleanedDto).length === 0){
+      // this.logger.log('No fields to update');
       throw new HttpException({
         status: HttpStatus.BAD_REQUEST,
         error: 'No fields to update',
@@ -73,6 +79,7 @@ export class UsersService {
     }
 
     if(this.hasForUnknownFields(cleanedDto)) {
+      // this.logger.log('Unknown fields');
       throw new HttpException({
         status: HttpStatus.BAD_REQUEST,
         error: 'Bad fields to update',

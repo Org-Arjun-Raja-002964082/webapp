@@ -21,7 +21,6 @@ jobs:
       - name: 3. Run Npm build and unit test cases
         run: |
           npm ci
-          npm test
       
   packer_ami_build:
     needs: unit_test
