@@ -1,16 +1,18 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { UpdateDocumentDto } from './dto/update-document.dto';
 import {S3} from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
 import { Document } from './entities/document.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 
 @Injectable()
 export class DocumentsService {
   constructor(
     @InjectRepository(Document) private readonly documentRepository: Repository<Document>,
-    private readonly logger: Logger,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
   ) {}
 
   async upload( file: Buffer, filename: string, user: any) {
@@ -24,7 +26,7 @@ export class DocumentsService {
         })
         .promise();
 
-      this.logger.log(`File uploaded to ${uploadResult.Location}`);
+      this.logger.log('info',`File uploaded to ${uploadResult.Location}`);
       let document = {
         doc_id: uploadResult.Key,
         user_id: user.id,
@@ -32,7 +34,7 @@ export class DocumentsService {
         s3_bucket_path: uploadResult.Location
       };
       await this.documentRepository.save(document);
-      this.logger.log(`File saved to database`);
+      this.logger.log('info',`File saved to database`);
       return  {
         key: uploadResult.Key,
         url: uploadResult.Location,
@@ -75,7 +77,7 @@ export class DocumentsService {
       for(let i = 0; i < filesData.length; i++){
         let file = filesData[i];
         if(file.doc_id === doc_id){
-          this.logger.log(`File found: ${file.doc_id}`);
+          this.logger.log('info',`File found: ${file.doc_id}`);
           return file;
         }
       }
@@ -93,7 +95,7 @@ export class DocumentsService {
   async remove(doc_id: string, user: any) {
     try{
       const user_id = user.id;
-      this.logger.log(`Finding file: ${doc_id} for user: ${user_id}`);
+      this.logger.log('info',`Finding file: ${doc_id} for user: ${user_id}`);
       const filesData = await this.documentRepository.find({where: {
         user_id,
         doc_id
@@ -114,7 +116,7 @@ export class DocumentsService {
           await this.documentRepository.delete({doc_id});
           return data;
       }).promise();
-      this.logger.log(`File deleted: ${doc_id}`);
+      this.logger.log('info',`File deleted: ${doc_id}`);
       return {message: 'File deleted successfully'};
     } catch(err) {
       this.logger.error(`Error deleting file: ${err}`);

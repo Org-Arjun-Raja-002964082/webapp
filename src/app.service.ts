@@ -1,4 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 var lynx = require('lynx');
 // import { HttpService } from '@nestjs/axios';
 
@@ -6,13 +8,13 @@ var lynx = require('lynx');
 @Injectable()
 export class AppService {
   constructor(
-    private readonly logger: Logger,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
   ) {}
   
   async getHealthz() {
     const statsd = new lynx('localhost', 8125);
     statsd.increment('healthz');
-    this.logger.log('Healthz called - returning 200 OK');
+    this.logger.log('info', 'Healthz called - returning 200 OK');
     return {status : "200 OK"};
   }
 }
