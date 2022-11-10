@@ -10,6 +10,7 @@ import { DocumentsModule } from './documents/documents.module';
 import entities from '../typeorm_entities';
 import { WinstonModule } from 'nest-winston';
 import { TestingModule } from './testing/testing.module';
+import { TestingService } from './testing/testing.service';
 import * as winston from 'winston';
 import * as CloudWatchTransport from 'winston-cloudwatch';
 
@@ -65,6 +66,6 @@ const options = {
   TestingModule
 ],
   controllers: [AppController],
-  providers: [AppService, Logger],
+  providers: [AppService, Logger, TestingService],
 })
 export class AppModule {}
