@@ -9,12 +9,13 @@ import {TypeOrmModule} from '@nestjs/typeorm';
 import { DocumentsModule } from './documents/documents.module';
 import entities from '../typeorm_entities';
 import { WinstonModule } from 'nest-winston';
+import { TestingModule } from './testing/testing.module';
 import * as winston from 'winston';
 import * as CloudWatchTransport from 'winston-cloudwatch';
 
 const options = {
   console: {
-    level: 'debug',
+    level: 'verbose',
     handleExceptions: true,
     json: false,
     colorize: true,
@@ -50,17 +51,18 @@ const options = {
     format: winston.format.uncolorize(),
     transports: [
       new winston.transports.Console(options.console),
-      new CloudWatchTransport({
-        name: 'Cloudwatch Logs',
-        logGroupName: "csye6225",
-        logStreamName: "webapp",
-        awsRegion: "us-east-1",
-        retentionInDays: 2,
-      }),
+      // new CloudWatchTransport({
+      //   name: 'Cloudwatch Logs',
+      //   logGroupName: "csye6225",
+      //   logStreamName: "webapp",
+      //   awsRegion: "us-east-1",
+      //   retentionInDays: 2,
+      // }),
     ],
 
   }),
-  DocumentsModule
+  DocumentsModule,
+  TestingModule
 ],
   controllers: [AppController],
   providers: [AppService, Logger],
