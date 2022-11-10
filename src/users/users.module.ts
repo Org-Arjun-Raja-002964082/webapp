@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Logger} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
@@ -10,7 +10,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
-    ConfigModule
+    ConfigModule,
+    Logger
   ],
   providers: [UsersService, AuthGuard, AuthService, ConfigService],
   exports: [UsersService],
