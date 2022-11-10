@@ -1,4 +1,6 @@
-import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
+import { Injectable, UnauthorizedException, Inject } from '@nestjs/common';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 
@@ -6,7 +8,7 @@ import * as bcrypt from 'bcrypt';
 export class AuthService {
   constructor(
     private usersService: UsersService,
-    private readonly logger: Logger,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
     ) {}
 
   async validateUser(username: string, pass: string): Promise<any> {
@@ -15,7 +17,7 @@ export class AuthService {
       const isMatch = await bcrypt.compare(pass, user.password);
       if(isMatch){
         const { password, ...result } = user;
-        this.logger.log('User validated');
+        this.logger.log('info','User validated');
         return result;
       }
     }

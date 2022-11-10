@@ -8,7 +8,19 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import { DocumentsModule } from './documents/documents.module';
 import entities from '../typeorm_entities';
+import { WinstonModule } from 'nest-winston';
+import * as winston from 'winston';
+import * as CloudWatchTransport from 'winston-cloudwatch';
 
+const options = {
+  console: {
+    level: 'debug',
+    handleExceptions: true,
+    json: false,
+    colorize: true,
+    timestamp: true,
+  },
+};
 @Module({
   imports: [
   HttpModule.registerAsync({
@@ -33,6 +45,20 @@ import entities from '../typeorm_entities';
       synchronize: true, // remove this in production
     }),
     inject: [ConfigService],
+  }),
+  WinstonModule.forRoot({
+    format: winston.format.uncolorize(),
+    transports: [
+      new winston.transports.Console(options.console),
+      new CloudWatchTransport({
+        name: 'Cloudwatch Logs',
+        logGroupName: "csye6225",
+        logStreamName: "webapp",
+        awsRegion: "us-east-1",
+        retentionInDays: 2,
+      }),
+    ],
+
   }),
   DocumentsModule
 ],
