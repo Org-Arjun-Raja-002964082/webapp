@@ -9,7 +9,6 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 var lynx = require('lynx');
 const statsd = new lynx('localhost', 8125);
-
 @Injectable()
 export class DocumentsService {
   constructor(
@@ -19,6 +18,7 @@ export class DocumentsService {
 
   async upload( file: Buffer, filename: string, user: any) {
     statsd.increment('POST/v1/documents/');
+    const timer = statsd.createTimer('POST/v1/documents/');
     try {
     const s3 = new S3();
       const uploadResult = await s3
@@ -38,6 +38,7 @@ export class DocumentsService {
       };
       await this.documentRepository.save(document);
       this.logger.log('info',`File saved to database`);
+      timer.stop();
       return  {
         key: uploadResult.Key,
         url: uploadResult.Location,
