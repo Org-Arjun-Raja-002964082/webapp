@@ -13,8 +13,10 @@ export class AppService {
   
   async getHealthz() {
     const statsd = new lynx('localhost', 8125);
+    const timer = statsd.createTimer('GET/healthz');
     statsd.increment('GET/healthz');
     this.logger.log('info', 'Healthz called - returning 200 OK');
+    timer.stop();
     return {status : "200 OK"};
   }
 }
