@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, UseGuards, UsePipes, ValidationPipe, Request } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, UseGuards, UsePipes, ValidationPipe, Request, Query } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -32,6 +32,13 @@ export class UsersController {
     @UsePipes(ValidationPipe)
     async create(@Body() createUserDto: CreateUserDto) { // this is a dummy function
         return await this.userService.createUser(createUserDto);;
+    }
+
+
+    @Get('verify')
+    async verifyUser(@Query() queryData) {
+         // this is a dummy function
+        return await this.userService.verifyUser(queryData.email, queryData.token);
     }
 
     @UseGuards(AuthGuard)

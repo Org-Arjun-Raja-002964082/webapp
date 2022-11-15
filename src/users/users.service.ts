@@ -9,12 +9,20 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 var lynx = require('lynx');
 const statsd = new lynx('localhost', 8125);
+import { SnsProvider } from '../providers/snsProvider';
+import { DynamoDbProvider } from '../providers/dynamoDbProvider';
 @Injectable()
 export class UsersService {
+
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
-  ) {}
+    private readonly dynamoDbProvider: DynamoDbProvider,
+    private readonly sns: SnsProvider,
+  ) {
+      this.dynamoDbProvider = new DynamoDbProvider( process.env.AWS_REGION, process.env.DYNAMODB_TABLE);
+      this.sns = new SnsProvider( process.env.SNS_TOPIC_ARN, process.env.AWS_REGION);
+    }
 
   async createUser(createUserDto: CreateUserDto) {
     statsd.increment('POST/v1/account');
@@ -30,8 +38,33 @@ export class UsersService {
     }
     createUserDto.password = await this.getHashedPassword(createUserDto.password);
     const newUser = this.userRepository.create(createUserDto);
-    const {password, ...response } = await this.userRepository.save(newUser);
-    return  response;
+    try {
+      // Add user access token to dynamo db
+      this.logger.info("Adding user " + newUser.username + " to dynamo db");
+      const userToken = await this.dynamoDbProvider.addUserToken(newUser.username);
+
+      // Send a message to Amazon SNS
+      this.logger.info("Sending message to Amazon SNS");
+      const message = {
+        username: newUser.username,
+        first_name: newUser.first_name,
+        last_name: newUser.last_name,
+        userToken: userToken,
+        message_type: "verify_user",
+      };
+      await this.sns.publishMessage(JSON.stringify(message));
+
+      // store the user in the db and return the user
+      this.logger.info("Storing user " + newUser.username + " in db");
+      const {password, ...response } = await this.userRepository.save(newUser);
+      return  response;
+    } catch (error) {
+      this.logger.error("Error creating user: " + error);
+      throw new HttpException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: 'Error creating user',
+      }, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   async findUsersById(id: number, req_user: any) {
@@ -121,5 +154,38 @@ export class UsersService {
       }
     }
     return updateUserDto
+  }
+
+  async verifyUser(username: string, userToken: string) {
+    statsd.increment('POST/v1/account/verify');
+    const isValid = await this.dynamoDbProvider.verifyUserToken(username, userToken);
+    if (isValid) {
+      this.logger.info("Email and token are valid");
+      this.logger.info("Updating user details in MySQL database");
+      const user = await this.findOne(username);
+      if (user) {
+        user.isVerified = true;
+        user.verified_at = new Date();
+        try {
+          await this.userRepository.update(user.id, user);
+        } catch (err) {
+          this.logger.error(err);
+          throw new HttpException({
+            status: HttpStatus.INTERNAL_SERVER_ERROR,
+            error: 'Error creating user',
+          }, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        this.logger.info("Email verified successfully");
+      }
+      return {
+          message: "Email verified successfully",
+      }
+    } else {
+      this.logger.info("Email or token is invalid");
+      throw new HttpException({
+        status: HttpStatus.BAD_REQUEST,
+        error: 'Email or token is invalid',
+      }, HttpStatus.BAD_REQUEST);
+    }
   }
 }

@@ -37,6 +37,19 @@ export class User {
     last_name: string;
     
 
+    @Column('boolean', 
+    {
+        default: false
+    })
+    isVerified: boolean = false;
+
+    @CreateDateColumn({ 
+        type: "timestamp", 
+        nullable: true,
+        default: null 
+    })
+    verified_at: Date;
+
     @CreateDateColumn({ 
         type: "timestamp", 
         default: () => "CURRENT_TIMESTAMP(6)" 
