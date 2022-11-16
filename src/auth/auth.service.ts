@@ -15,7 +15,8 @@ export class AuthService {
     const user = await this.usersService.findOne(username);
     if(user){
       const isMatch = await bcrypt.compare(pass, user.password);
-      if(isMatch){
+      const { isVerified } = user;
+      if(isMatch && isVerified) {
         const { password, ...result } = user;
         this.logger.log('info','User validated');
         return result;

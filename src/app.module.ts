@@ -11,6 +11,8 @@ import entities from '../typeorm_entities';
 import { WinstonModule } from 'nest-winston';
 import { TestingModule } from './testing/testing.module';
 import { TestingService } from './testing/testing.service';
+import { AwssnsModule } from './awssns/awssns.module';
+import { AwsdynamoModule } from './awsdynamo/awsdynamo.module';
 import * as winston from 'winston';
 import * as CloudWatchTransport from 'winston-cloudwatch';
 
@@ -52,18 +54,20 @@ const options = {
     format: winston.format.uncolorize(),
     transports: [
       new winston.transports.Console(options.console),
-      // new CloudWatchTransport({
-      //   name: 'Cloudwatch Logs',
-      //   logGroupName: "csye6225",
-      //   logStreamName: "webapp",
-      //   awsRegion: "us-east-1",
-      //   retentionInDays: 2,
-      // }),
+      new CloudWatchTransport({
+        name: 'Cloudwatch Logs',
+        logGroupName: "csye6225",
+        logStreamName: "webapp",
+        awsRegion: "us-east-1",
+        retentionInDays: 2,
+      }),
     ],
 
   }),
   DocumentsModule,
-  TestingModule
+  TestingModule,
+  AwssnsModule,
+  AwsdynamoModule
 ],
   controllers: [AppController],
   providers: [AppService, Logger, TestingService],
