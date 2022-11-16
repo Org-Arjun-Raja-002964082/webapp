@@ -54,13 +54,13 @@ const options = {
     format: winston.format.uncolorize(),
     transports: [
       new winston.transports.Console(options.console),
-      new CloudWatchTransport({
-        name: 'Cloudwatch Logs',
-        logGroupName: "csye6225",
-        logStreamName: "webapp",
-        awsRegion: "us-east-1",
-        retentionInDays: 2,
-      }),
+      // new CloudWatchTransport({
+      //   name: 'Cloudwatch Logs',
+      //   logGroupName: "csye6225",
+      //   logStreamName: "webapp",
+      //   awsRegion: "us-east-1",
+      //   retentionInDays: 2,
+      // }),
     ],
 
   }),
