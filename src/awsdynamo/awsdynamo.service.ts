@@ -1,11 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import * as AWS from 'aws-sdk';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
+
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient(); 
 
 @Injectable()
 export default class AwsdynamoService {
+
+    constructor(@Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,) {}
 
     async addUserToken(userName) {
         // create user token
@@ -14,7 +19,7 @@ export default class AwsdynamoService {
     
         // find epoch time of 300 seconds from now
         let epochTime = new Date().getTime() / 1000 + 300;
-    
+        this.logger.log('info','addUserToken called for user: ' + userName);
         let params = {
             TableName: process.env.DYNAMODB_TABLE_TTL,
             Item: {
@@ -27,8 +32,10 @@ export default class AwsdynamoService {
             tokenttl: {
                 N: epochTime.toString(),
             },
-            },
+            }
         };
+        this.logger.log('info','dynamoDb.put called for user with params: ' + params);
+        this.logger.log('info', `process.env.DYNAMODB_TABLE_TTL: ${process.env.DYNAMODB_TABLE_TTL}`);
         await dynamoDb.put(params).promise();
         return userToken;
     }
