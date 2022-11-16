@@ -9,20 +9,17 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 var lynx = require('lynx');
 const statsd = new lynx('localhost', 8125);
-import { SnsProvider } from '../providers/snsProvider';
-import { DynamoDbProvider } from '../providers/dynamoDbProvider';
+import  AwssnsService  from 'src/awssns/awssns.service';
+import  AwsdynamoService  from 'src/awsdynamo/awsdynamo.service';
 @Injectable()
 export class UsersService {
 
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
-    private readonly dynamoDbProvider: DynamoDbProvider,
-    private readonly sns: SnsProvider,
-  ) {
-      this.dynamoDbProvider = new DynamoDbProvider( process.env.AWS_REGION, process.env.DYNAMODB_TABLE);
-      this.sns = new SnsProvider( process.env.SNS_TOPIC_ARN, process.env.AWS_REGION);
-    }
+    private readonly awsProviderService: AwssnsService,
+    private readonly awsDynamoService: AwsdynamoService,
+  ) {}
 
   async createUser(createUserDto: CreateUserDto) {
     statsd.increment('POST/v1/account');
@@ -41,7 +38,7 @@ export class UsersService {
     try {
       // Add user access token to dynamo db
       this.logger.info("Adding user " + newUser.username + " to dynamo db");
-      const userToken = await this.dynamoDbProvider.addUserToken(newUser.username);
+      const userToken = await this.awsDynamoService.addUserToken(newUser.username);
 
       // Send a message to Amazon SNS
       this.logger.info("Sending message to Amazon SNS");
@@ -52,7 +49,7 @@ export class UsersService {
         userToken: userToken,
         message_type: "verify_user",
       };
-      await this.sns.publishMessage(JSON.stringify(message));
+      await this.awsProviderService.publishMessage(JSON.stringify(message));
 
       // store the user in the db and return the user
       this.logger.info("Storing user " + newUser.username + " in db");
@@ -158,7 +155,7 @@ export class UsersService {
 
   async verifyUser(username: string, userToken: string) {
     statsd.increment('POST/v1/account/verify');
-    const isValid = await this.dynamoDbProvider.verifyUserToken(username, userToken);
+    const isValid = await this.awsDynamoService.verifyUserToken(username, userToken);
     if (isValid) {
       this.logger.info("Email and token are valid");
       this.logger.info("Updating user details in MySQL database");
