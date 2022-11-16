@@ -16,7 +16,7 @@ export default class AwsdynamoService {
         let epochTime = new Date().getTime() / 1000 + 300;
     
         let params = {
-            TableName: process.env.DYNAMODB_TABLE,
+            TableName: process.env.DYNAMODB_TABLE_TTL,
             Item: {
             username: {
                 S: userName,
@@ -37,7 +37,7 @@ export default class AwsdynamoService {
         // get user token from dynamo db
         // exclude expired tokens
         let params = {
-            TableName: process.env.DYNAMODB_TABLE,
+            TableName: process.env.DYNAMODB_TABLE_TTL,
             Key: {
             username: {
                 S: userName,

@@ -33,14 +33,4 @@ export default class AwssnsService {
       SequenceNumber: response.SequenceNumber,
     };
   }
-
-  async addUserToken(userName) {
-    console.log('userName: ', userName);
-  }
-
-  async verifyUserToken(userName, userToken) {
-    console.log('userName: ', userName);
-    console.log('userToken: ', userToken);
-    return true;
-  }
 }
