@@ -61,7 +61,7 @@ const options = {
         awsRegion: "us-east-1"
       }),
     ],
-
+    exitOnError: false,
   }),
   DocumentsModule,
   TestingModule,

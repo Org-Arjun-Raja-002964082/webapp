@@ -10,7 +10,7 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 @Injectable()
 export default class AwsdynamoService {
 
-    constructor(@Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,) {}
+    constructor(@Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger) {}
 
     async addUserToken(userName) {
         // create user token
@@ -19,22 +19,18 @@ export default class AwsdynamoService {
     
         // find epoch time of 300 seconds from now
         let epochTime = new Date().getTime() / 1000 + 300;
-        this.logger.log('info','addUserToken called for user: ' + userName);
+        
         let params = {
             TableName: process.env.DYNAMODB_TABLE_TTL,
             Item: {
-            username: {
-                S: userName,
-            },
-            usertoken: {
-                S: userToken,
-            },
-            tokenttl: {
-                N: epochTime.toString(),
-            },
+            username:  userName,
+            usertoken: userToken,
+            tokenttl: epochTime.toString(),
             }
         };
-        this.logger.log('info','dynamoDb.put called for user with params: ' + params);
+        this.logger.log('info','addUserToken called for user: ' + userName);
+        this.logger.log('info','addUserToken token: ' + userToken);
+        this.logger.log('info','dynamoDb.put called for user with params: ' + JSON.stringify(params));
         this.logger.log('info', `process.env.DYNAMODB_TABLE_TTL: ${process.env.DYNAMODB_TABLE_TTL}`);
         await dynamoDb.put(params).promise();
         return userToken;
@@ -46,9 +42,7 @@ export default class AwsdynamoService {
         let params = {
             TableName: process.env.DYNAMODB_TABLE_TTL,
             Key: {
-            username: {
-                S: userName,
-            },
+            username: userName,
             },
         };
     
