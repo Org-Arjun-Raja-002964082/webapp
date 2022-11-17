@@ -58,11 +58,10 @@ const options = {
         name: 'Cloudwatch Logs',
         logGroupName: "csye6225",
         logStreamName: "webapp",
-        awsRegion: "us-east-1",
-        retentionInDays: 2,
+        awsRegion: "us-east-1"
       }),
     ],
-
+    exitOnError: false,
   }),
   DocumentsModule,
   TestingModule,

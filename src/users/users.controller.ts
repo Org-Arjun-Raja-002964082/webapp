@@ -7,9 +7,17 @@ import { UsersService } from './users.service';
 @Controller('v1/account')
 export class UsersController {
     constructor(private readonly userService: UsersService) {}
+    @Get('verify')
+    async verifyUser(@Query() queryData) {
+        return await this.userService.verifyUser(queryData.email, queryData.token);
+    }
 
+    @Post()
+    @UsePipes(ValidationPipe)
+    async create(@Body() createUserDto: CreateUserDto) { // this is a dummy function
+        return await this.userService.createUser(createUserDto);;
+    }
 
-    
     @UseGuards(AuthGuard)
     @Get(':id')
     async findOneById(@Request() req, @Param('id', ParseIntPipe) id: number) { // this is a dummy function
@@ -28,18 +36,8 @@ export class UsersController {
         return await this.userService.update(updateUserDto, req.user, id);
     }
 
-    @Post()
-    @UsePipes(ValidationPipe)
-    async create(@Body() createUserDto: CreateUserDto) { // this is a dummy function
-        return await this.userService.createUser(createUserDto);;
-    }
-
-
-    @Get('verify')
-    async verifyUser(@Query() queryData) {
-         // this is a dummy function
-        return await this.userService.verifyUser(queryData.email, queryData.token);
-    }
+    
+    
 
     @UseGuards(AuthGuard)
     @Get()
