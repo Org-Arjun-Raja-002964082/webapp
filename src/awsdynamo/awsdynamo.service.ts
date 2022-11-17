@@ -39,6 +39,9 @@ export default class AwsdynamoService {
     async verifyUserToken(userName, userToken) {
         // get user token from dynamo db
         // exclude expired tokens
+        this.logger.log('info','verifyUserToken called for user: ' + userName);
+        this.logger.log('info','verifyUserToken token: ' + userToken);
+        this.logger.log('info', `process.env.DYNAMODB_TABLE_TTL: ${process.env.DYNAMODB_TABLE_TTL}`);
         let params = {
             TableName: process.env.DYNAMODB_TABLE_TTL,
             Key: {
@@ -47,6 +50,7 @@ export default class AwsdynamoService {
         };
     
         let data = await dynamoDb.get(params).promise();
+        console.log('data: ', data);
         if (data.Item && data.Item.usertoken && data.Item.tokenttl) {
             let userTokenFromDb = data.Item.usertoken.S;
             let tokenTTL = parseInt(data.Item.tokenttl.N);
