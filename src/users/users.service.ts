@@ -23,6 +23,7 @@ export class UsersService {
 
   async createUser(createUserDto: CreateUserDto) {
     statsd.increment('POST/v1/account');
+    const timer = statsd.createTimer('POST/v1/account');
     const prevUser = await this.userRepository.findOne({
       where: { username: createUserDto.username }
     });
@@ -54,6 +55,7 @@ export class UsersService {
       // store the user in the db and return the user
       this.logger.info("Storing user " + newUser.username + " in db");
       const {password, ...response } = await this.userRepository.save(newUser);
+      timer.stop();
       return  response;
     } catch (error) {
       this.logger.error("Error creating user: " + error);
@@ -97,6 +99,7 @@ export class UsersService {
 
   async update(updateUserDto: UpdateUserDto, user: any, id: string) {
     statsd.increment('PUT/v1/account/{id}');
+    const timer = statsd.createTimer('PUT/v1/account/{id}');
     let user_param_id = parseInt(id);
     if(user_param_id != user.id) {
       this.logger.log('info','Unauthorized user');
@@ -125,6 +128,7 @@ export class UsersService {
     if(cleanedDto.password) {
       cleanedDto.password = await this.getHashedPassword(cleanedDto.password);
     }
+    timer.stop();
     return await this.userRepository.update(user.id, cleanedDto);
   }
 
