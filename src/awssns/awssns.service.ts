@@ -10,7 +10,7 @@ export default class AwssnsService {
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
     ) {
     this.client = new SNS({
-      region: "us-west-1",
+      region: "us-east-1",
     });
   }
 
