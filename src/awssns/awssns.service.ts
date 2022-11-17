@@ -20,7 +20,7 @@ export default class AwssnsService {
     this.logger.log('info', `process.env.SNS_TOPIC_ARN: ${process.env.SNS_TOPIC_ARN}`);
     const params = {
       TopicArn: process.env.SNS_TOPIC_ARN,
-      Message: JSON.stringify(payload)
+      Message: payload
     };
     this.logger.log('info','publishMessage called with params: ' + JSON.stringify(params));
     // Create promise and SNS service object

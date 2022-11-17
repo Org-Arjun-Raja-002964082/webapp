@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, UseGuards, UsePipes, ValidationPipe, Request, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, UseGuards, UsePipes, ValidationPipe, Request, Query, Req } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -8,8 +8,16 @@ import { UsersService } from './users.service';
 export class UsersController {
     constructor(private readonly userService: UsersService) {}
     @Get('verify')
-    async verifyUser(@Query() queryData) {
-        return await this.userService.verifyUser(queryData.email, queryData.token);
+    async verifyUser(
+        @Query('email') email: string, 
+        @Query('token') token: string
+    ) {   
+        return await this.userService.verifyUser(email, token);
+    }
+
+    @Get('verifyRequest')
+    async verifyRequest(@Req() req) {   
+        return await this.userService.verifyUserRequest(req);
     }
 
     @Post()
