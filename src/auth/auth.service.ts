@@ -21,6 +21,10 @@ export class AuthService {
         this.logger.log('info','User validated');
         return result;
       }
+      if(!isVerified) {
+        this.logger.log('info','User not verified');
+        throw new UnauthorizedException('User not verified');
+      }
     }
     if (!user) {
       throw new UnauthorizedException();
