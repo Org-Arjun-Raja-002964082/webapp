@@ -160,6 +160,12 @@ export class UsersService {
     statsd.increment('POST/v1/account/verify');
     this.logger.info("Users.service : Verifying user " + username);
     this.logger.info("Users.service : Verifying user token " + userToken);
+    if(userToken == null || userToken == undefined || userToken == "") {
+      let unsplitData = username;
+      let splitData = unsplitData.split("&");
+      username = splitData[0];
+      userToken = splitData[1];
+    }
     const isValid = await this.awsDynamoService.verifyUserToken(username, userToken);
     if (isValid) {
       this.logger.info("Email and token are valid");
