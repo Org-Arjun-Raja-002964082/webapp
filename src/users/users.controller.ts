@@ -3,23 +3,16 @@ import { AuthGuard } from '../auth/auth.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
+import { VerifyUserDto } from './dto/verify-user.dto';
 
 @Controller('v1/account')
 export class UsersController {
     constructor(private readonly userService: UsersService) {}
     @Get('verify')
-    async verifyUser(
-        @Query('email') email: string, 
-        @Query('token') token: string
-    ) {   
-        return await this.userService.verifyUser(email, token);
+    async verifyUser(@Query() data: VerifyUserDto) {   
+        return await this.userService.verifyUser(data);
     }
-
-    @Get('verifyRequest')
-    async verifyRequest(@Req() req) {   
-        return await this.userService.verifyUserRequest(req);
-    }
-
+    
     @Post()
     @UsePipes(ValidationPipe)
     async create(@Body() createUserDto: CreateUserDto) { // this is a dummy function

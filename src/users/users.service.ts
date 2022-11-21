@@ -11,6 +11,7 @@ var lynx = require('lynx');
 const statsd = new lynx('localhost', 8125);
 import  AwssnsService  from 'src/awssns/awssns.service';
 import  AwsdynamoService  from 'src/awsdynamo/awsdynamo.service';
+import { VerifyUserDto } from './dto/verify-user.dto';
 @Injectable()
 export class UsersService {
 
@@ -153,7 +154,9 @@ export class UsersService {
     return updateUserDto
   }
 
-  async verifyUser(username: string, userToken: string) {
+  async verifyUser(data : VerifyUserDto) {
+    let username = data.email;
+    let userToken = data.token;
     statsd.increment('POST/v1/account/verify');
     this.logger.info("Users.service : Verifying user " + username);
     this.logger.info("Users.service : Verifying user token " + userToken);
@@ -162,41 +165,6 @@ export class UsersService {
       this.logger.info("Email and token are valid");
       this.logger.info("Updating user details in MySQL database");
       const user = await this.findOne(username);
-      if (user) {
-        user.isVerified = true;
-        user.verified_at = new Date();
-        try {
-          await this.userRepository.update(user.id, user);
-        } catch (err) {
-          this.logger.error(err);
-          throw new HttpException({
-            status: HttpStatus.INTERNAL_SERVER_ERROR,
-            error: 'Error creating user',
-          }, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        this.logger.info("Email verified successfully");
-      }
-      return {
-          message: "Email verified successfully",
-      }
-    } else {
-      this.logger.info("Email or token is invalid");
-      throw new HttpException({
-        status: HttpStatus.BAD_REQUEST,
-        error: 'Email or token is invalid',
-      }, HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  async verifyUserRequest(Req: any) {
-    statsd.increment('POST/v1/account/verify');
-    this.logger.info("Users.service : Verifying user " + Req.username);
-    this.logger.info("Users.service : Verifying user token " + Req.userToken);
-    const isValid = await this.awsDynamoService.verifyUserToken(Req.username, Req.userToken);
-    if (isValid) {
-      this.logger.info("Email and token are valid");
-      this.logger.info("Updating user details in MySQL database");
-      const user = await this.findOne(Req.username);
       if (user) {
         user.isVerified = true;
         user.verified_at = new Date();
