@@ -39,6 +39,7 @@ export default class AwsdynamoService {
     async verifyUserToken(userName, userToken) {
         // get user token from dynamo db
         // exclude expired tokens
+        this.logger.log('info', `process.env.DYNAMODB_TABLE_TTL: ${process.env.DYNAMODB_TABLE_TTL}`);
         let params = {
             TableName: process.env.DYNAMODB_TABLE_TTL,
             Key: {
@@ -46,13 +47,19 @@ export default class AwsdynamoService {
             },
         };
     
+        this.logger.log('info','dynamoDb.get called for user with params: ' + JSON.stringify(params));
         let data = await dynamoDb.get(params).promise();
+        this.logger.log('info','dynamoDb returned data: ' + JSON.stringify(data));
         if (data.Item && data.Item.usertoken && data.Item.tokenttl) {
-            let userTokenFromDb = data.Item.usertoken.S;
-            let tokenTTL = parseInt(data.Item.tokenttl.N);
+            let userTokenFromDb = data.Item.usertoken;
+            let tokenTTL = data.Item.tokenttl;
             let currentTime = new Date().getTime() / 1000;
+            this.logger.log('info',':userTokenFromDb ' + userTokenFromDb);
+            this.logger.log('info',':tokenTTL' + tokenTTL);
+            this.logger.log('info','currentTime calculated = ' + currentTime);
+            this.logger.log('info','conition check ' + (currentTime < tokenTTL));
             if (userTokenFromDb === userToken && currentTime < tokenTTL) {
-            return true;
+                return true;
             }
         }
         return false;

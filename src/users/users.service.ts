@@ -11,6 +11,7 @@ var lynx = require('lynx');
 const statsd = new lynx('localhost', 8125);
 import  AwssnsService  from 'src/awssns/awssns.service';
 import  AwsdynamoService  from 'src/awsdynamo/awsdynamo.service';
+import { VerifyUserDto } from './dto/verify-user.dto';
 @Injectable()
 export class UsersService {
 
@@ -157,8 +158,18 @@ export class UsersService {
     return updateUserDto
   }
 
-  async verifyUser(username: string, userToken: string) {
+  async verifyUser(data : VerifyUserDto) {
+    let username = data.email;
+    let userToken = data.token;
     statsd.increment('POST/v1/account/verify');
+    this.logger.info("Users.service : Verifying user " + username);
+    this.logger.info("Users.service : Verifying user token " + userToken);
+    if(userToken == null || userToken == undefined || userToken == "") {
+      let unsplitData = username;
+      let splitData = unsplitData.split("&");
+      username = splitData[0];
+      userToken = splitData[1];
+    }
     const isValid = await this.awsDynamoService.verifyUserToken(username, userToken);
     if (isValid) {
       this.logger.info("Email and token are valid");
