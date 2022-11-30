@@ -4,7 +4,7 @@ variable "aws_region" {
 }
 variable "ami_source_owner" {
   type    = string
-  default = "735786237983"
+  default = "154872826991"
 }
 variable "source_ami" {
   type    = string

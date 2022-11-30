@@ -15,7 +15,7 @@ import { AwssnsModule } from './awssns/awssns.module';
 import { AwsdynamoModule } from './awsdynamo/awsdynamo.module';
 import * as winston from 'winston';
 import * as CloudWatchTransport from 'winston-cloudwatch';
-import fs from 'fs';
+import * as fs from 'fs';
 
 const options = {
   console: {
@@ -48,7 +48,7 @@ const options = {
       database: configService.get('DB_NAME'),
       entities: entities,
       ssl: {
-        ca: fs.readFileSync(__dirname + '/rds-combined-ca-bundle.pem').toString(),
+        ca: fs.readFileSync(__dirname + '/global-bundle.pem').toString(),
       },
       synchronize: true, // remove this in production
     }),

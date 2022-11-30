@@ -39,8 +39,8 @@ jobs:
       - name: 3. Configure the IAM user Credentials set up in github secrets
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEMO }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEMO }}
           aws-region: us-east-1
       - name: 4. Initialize Packer
         uses: hashicorp/packer-github-actions@master
@@ -59,5 +59,39 @@ jobs:
           command: build
           arguments: "-color=false -on-error=abort"
           target: custom-ami.pkr.hcl
+      - name: 7. Get the latest AMI ID
+        run: |
+          AMI_ID=$(aws ec2 describe-images \
+          --owners 735786237983 \
+          --query 'sort_by(Images,&CreationDate)[-1].ImageId')
+          echo "AMI_ID=$AMI_ID" >> $GITHUB_ENV
+          echo "Selected AMI ID ${{ env.AMI_ID }}"
+      - name: 8. Cli command to fetch Launch template sorted based on time created
+        run: |
+          LAUNCHTEMPLATE_ID=$(aws ec2 describe-launch-templates \
+          --query 'sort_by(LaunchTemplates,&CreateTime)[-1].LaunchTemplateId')
+          echo "LAUNCHTEMPLATE_ID=$LAUNCHTEMPLATE_ID" >> $GITHUB_ENV
+      - name: 9. Store the Autoscaling group name in env file if it is present
+        if: ${{ env.LAUNCHTEMPLATE_ID != 'null' }}
+        run: |
+          AutoScalingGroup_Name=$(aws autoscaling describe-auto-scaling-groups \
+          --query 'sort_by(AutoScalingGroups,&CreatedTime)[-1].AutoScalingGroupName')
+          echo "AutoScalingGroup_Name=$AutoScalingGroup_Name" >> $GITHUB_ENV
+          echo "${{ env.AutoScalingGroup_Name }}"
+      - name: 10. Use Latest AMI to create new Launch Template
+        if: ${{ env.LAUNCHTEMPLATE_ID != 'null' }}
+        run: |
+          aws ec2 create-launch-template-version --launch-template-id ${{ env.LAUNCHTEMPLATE_ID }} --version-description latestVersion \
+          --source-version 1 --launch-template-data "ImageId=${{ env.AMI_ID }}"
+      - name: 11. Launch new Templates
+        if: ${{ env.LAUNCHTEMPLATE_ID != 'null' }}
+        run: |
+          aws autoscaling update-auto-scaling-group \
+          --auto-scaling-group-name ${{ env.AutoScalingGroup_Name }} \
+          --launch-template LaunchTemplateName=asg_launch_config,Version='$Latest'
+      - name: 12. Performing an instance refresh to the auto-scale group
+        if: ${{ env.LAUNCHTEMPLATE_ID != 'null' }}
+        run: |
+          aws autoscaling start-instance-refresh --auto-scaling-group-name ${{ env.AutoScalingGroup_Name }}
         env:
           PACKER_LOG: 1
