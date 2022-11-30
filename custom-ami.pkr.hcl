@@ -16,7 +16,7 @@ variable "ssh_username" {
 }
 variable "subnet_id" {
   type    = string
-  default = "subnet-05fc83f8baefc8749"
+  default = "subnet-0954be4e01a21bc46"
 }
 
 # https://www.packer.io/plugins/builders/amazon/ebs
