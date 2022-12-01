@@ -62,7 +62,7 @@ jobs:
       - name: 7. Get the latest AMI ID
         run: |
           AMI_ID=$(aws ec2 describe-images \
-          --owners 735786237983 \
+          --owners 154872826991 \
           --query 'sort_by(Images,&CreationDate)[-1].ImageId')
           echo "AMI_ID=$AMI_ID" >> $GITHUB_ENV
           echo "Selected AMI ID ${{ env.AMI_ID }}"
