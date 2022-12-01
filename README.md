@@ -96,3 +96,13 @@ v1/documents/:id[GET] - get document for user
 v1/documents/
 ```
 
+## Import SSL Certificate
+
+```
+aws acm import-certificate --certificate 
+fileb://demo.arjunraja.me/certificate.pem --certificate-chain 
+fileb://demo.arjunraja.me/ca_bundle.pem --private-key 
+fileb://demo.arjunraja.me/private.pem
+
+```
+
