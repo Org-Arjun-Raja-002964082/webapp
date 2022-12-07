@@ -5,7 +5,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 import { VerifyUserDto } from './dto/verify-user.dto';
 
-@Controller('v1/account')
+@Controller('v2/account')
 export class UsersController {
     constructor(private readonly userService: UsersService) {}
     @Get('verify')
